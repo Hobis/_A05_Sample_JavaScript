@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>PIXI_index_hb</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style>
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #000000;
+}
+</style>
+<script src="js/pixi.js"></script>
+</head>
+
+<body>
+<script>
+
+(function() {
+	var t_do = {};
+	window._dataObj = t_do;
+
+	t_do.stageWidth = 400;
+	t_do.stageHeight = 300;
+	t_do.stageColor = 0x996699;
+
+	t_do.stage = new PIXI.Stage(t_do.stageColor);
+	t_do.renderer = PIXI.autoDetectRenderer(t_do.stageWidth, t_do.stageHeight);
+
+	var t_bunnyTexture = PIXI.Texture.fromImage('images/bunny.png');
+	t_do.bunny = new PIXI.Sprite(t_bunnyTexture);
+	t_do.body = window.document.body;
+	t_do.bunny.anchor.x = 0.5;
+	t_do.bunny.anchor.y = 0.5;
+	t_do.bunny.position.x = t_do.stageWidth / 2;
+	t_do.bunny.position.y = t_do.stageHeight / 2;
+	t_do.stage.addChild(t_do.bunny);
+	t_do.requestAnimationFrame = function() {
+		var t_do = window._dataObj;
+		window.requestAnimationFrame(t_do.requestAnimationFrame);
+		t_do.bunny.rotation += 0.1;
+		t_do.renderer.render(t_do.stage);
+	};
+	t_do.body.appendChild(t_do.renderer.view);
+
+	window.requestAnimationFrame(t_do.requestAnimationFrame);
+})();
+
+</script>
+</body>
+</html>

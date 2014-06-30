@@ -1,0 +1,436 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Main</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body {
+	margin: 0px; padding: 0px; overflow: hidden;
+	background-color: #ffffff;
+	font-family: 돋움;
+	font-size: 11px;
+	color: #000000;
+}
+
+#stageCont_dv {
+	width: 600px; height: 600px;
+	position: absolute; left: 20px; top: 20px;
+	overflow: hidden;
+	/*display: none;*/
+	background-image: url('images/Background.png');
+	background-repeat: no-repeat;
+/*
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #ff0000;*/
+}
+#canvasCont_dv {
+	width: 400px; height: 600px;
+	position: absolute; left: 200px; top: 0px;
+	overflow: hidden;
+	/*background-color: #ff0000;*/
+}
+#testLog_dv {
+	width: 400px; height: 260px;
+	position: absolute; left: 10px; top: 610px;
+	overflow: scroll;
+	background-color: #ff0000;
+	color: #ffffff;
+	display: none;
+}
+</style>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+// ::
+var p_testLog = function(msg) {
+	if (window._dataObj.isLog) {
+		var t_o = jQuery('#testLog_dv');
+		t_o.append('# [hb] ' + msg + '<br />');
+	}
+};
+
+// :: 캔버스 쉐이프오브젝트 이동 (Left)
+var p_canvas_shapeObjMove_left = function(so) {
+};
+
+// :: 캔버스 쉐이프오브젝트 이동 (Right)
+var p_canvas_shapeObjMove_right = function(so) {
+};
+
+// :: 캔버스 쉐이프오브젝트 이동 (Down)
+var p_canvas_shapeObjMove_down = function(so) {
+};
+
+// :: 캔버스 쉐이프오브젝트 업데이트 체크(위치해도 될 위치에 있는지 먼저 확인합니다.)
+var p_canvas_shapeObjUpdate_check = function(so) {
+	var t_do = window._dataObj;
+
+	var t_rv = false;
+
+	var t_cos = so.cos;
+	var t_la = t_cos.length;
+	for (var i = 0; i < t_la; i++) {
+		var t_co = t_cos[i];
+		var t_ci = p_canvas_cptoci({
+			x: so.dx + t_co.x,
+			y: so.dy + t_co.y
+		});
+		var t_c = t_do.cells[t_ci];
+		if (t_c == undefined) {
+			t_rv = false;
+			break;
+		}
+		else {
+			if (t_c.d_sn == 0) {
+				t_rv = true;
+			}
+			else {
+				t_rv = false;
+				break;
+			}
+		}
+	}
+
+	return t_rv;
+};
+
+// :: 캔버스 쉐이프오브젝트 업데이트
+var p_canvas_shapeObjUpdate = function(so) {
+	var t_do = window._dataObj;
+
+	if (p_canvas_shapeObjUpdate_check(so)) {
+		var t_cos = so.cos;
+		var t_la = t_cos.length;
+		for (var i = 0; i < t_la; i++) {
+			var t_co = t_cos[i];
+			var t_ci = p_canvas_cptoci({
+				x: so.dx + t_co.x,
+				y: so.dy + t_co.y
+			});
+
+			p_canvas_cellStateChange_i(t_ci, so.tNum);
+		}
+	}
+};
+
+// :: 캔버스 쉐이프오브젝트 생성 @Params(tNum: 타입번호)
+var p_canvas_shapeObjCreate = function(tNum) {
+	var t_do = window._dataObj;
+
+	var t_so = null;
+
+	switch (tNum) {
+		case 1: {
+			/*
+				 x
+				 x
+				xx
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 1, y: 0}, {x: 1, y: 1}, {x: 0, y: 2}, {x: 1, y: 2}]//CellObjs
+			};
+
+			break;
+		}
+
+		case 2: {
+			/*
+				x
+				x
+				xx
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}, {x: 1, y: 2}]
+			};
+
+			break;
+		}
+
+		case 3: {
+			/*
+				x
+				xx
+				 x
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 0, y: 0}, {x: 0, y: 1}, {x: 1, y: 1}, {x: 1, y: 2}]
+			};
+
+			break;
+		}
+
+		case 4: {
+			/*
+				xx
+				xx
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 0, y: 1}, {x: 1, y: 1}]
+			};
+
+			break;
+		}
+
+		case 5: {
+			/*
+				 x
+				xx
+				x
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 1, y: 0}, {x: 0, y: 1}, {x: 1, y: 1}, {x: 0, y: 2}]
+			};
+
+			break;
+		}
+
+		case 6: {
+			/*
+				xxx
+				 x
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 0}, {x: 1, y: 1}]
+			};
+
+			break;
+		}
+
+		case 7: {
+			/*
+				x
+				x
+				x
+				x
+			*/
+			t_so = {
+				tNum: tNum//TypeNum
+				,
+				dx: (t_do.hl / 2) - 2//DefaultX
+				,
+				dy: 0//DefaultY
+				,
+				cos: [{x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2}, {x: 0, y: 3}]
+			};
+
+			break;
+		}
+	}
+
+
+	return t_so;
+};
+
+// :: 셀포지션 -> 셀인덱스
+var p_canvas_cptoci = function(cp) {
+	var t_do = window._dataObj;
+	return (cp.y * t_do.hl) + cp.x;
+};
+
+// :: 셀인덱스 -> 셀포지션
+var p_canvas_citocp = function(ci) {
+	var t_do = window._dataObj;
+	return {x: (ci % t_do.hl), y: Math.floor(ci / t_do.hl)};
+};
+
+// :: 캔버스 셀 상태변경 (Index로 접근)
+var p_canvas_cellStateChange_i = function(ci, sn) {
+	var t_do = window._dataObj;
+
+	var t_cells = t_do.cells;
+	var t_c = t_cells[ci];
+
+	if (sn == 0) {
+		t_c.css('display', 'none');
+	}
+	else {
+		var t_color = null;
+		switch (sn) {
+			case 1: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#ff0000');
+				t_c.d_sn = 1;
+				break;
+			}
+			case 2: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#33ff00');
+				t_c.d_sn = 2;
+				break;
+			}
+			case 3: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#00ff99');
+				t_c.d_sn = 3;
+				break;
+			}
+			case 4: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#3300ff');
+				t_c.d_sn = 4;
+				break;
+			}
+			case 5: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#ff00cc');
+				t_c.d_sn = 5;
+				break;
+			}
+			case 6: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#ffcc00');
+				t_c.d_sn = 6;
+				break;
+			}
+			case 7: {
+				t_c.css('display', 'block');
+				t_c.css('background-color', '#0099ff');
+				t_c.d_sn = 7;
+				break;
+			}
+		}
+	}
+};
+
+// :: 캔버스 셀 상태변경
+var p_canvas_cellStateChange = function(cp, sn) {
+	p_canvas_cellStateChange_i(p_canvas_cptoci(cp), sn);
+};
+
+// :: 캔버스 셀 생성
+var p_canvas_createCell = function() {
+	var t_DIV_STR =
+		'<div style="position: absolute; left: 0px; top: 0px; ' +
+			'overflow: hidden; width: 18px; height: 18px; ' +
+			'background-color: #ffffff; ' +
+			'border: 1px solid #000066"></div>';
+	var t_rv = jQuery(t_DIV_STR);
+	return t_rv;
+};
+
+// :: 캔버스 셀들 생성
+var p_canvas_createCells = function() {
+	var t_do = window._dataObj;
+
+	var t_cells = [];
+	t_do.cells = t_cells;
+
+	var t_canvasCont = jQuery('#canvasCont_dv');
+
+	for (var i = 0; i < t_do.tl; i++) {
+		var t_c = p_canvas_createCell();
+		var t_tx = Math.round((t_do.cdw + t_do.cmr) * (i % t_do.hl));
+		var t_ty = Math.round((t_do.cdh + t_do.cmb) * Math.floor(i / t_do.hl));
+		var t_rx = t_do.cbx + t_tx;
+		var t_ry = t_do.cby + t_ty;
+		t_c.css('left', t_rx + 'px');
+		t_c.css('top', t_ry + 'px');
+		t_c.css('display', 'none');
+		t_canvasCont.append(t_c);
+
+		t_c.d_i = i;//CellIndex
+		t_c.d_sn = 0;//CellStateNum 0, 1, 2, 3, 4, 5, 6, 7
+		t_cells.push(t_c);
+	}
+};
+
+// :: 캔버스 초기화
+var p_canvas_init = function() {
+	var t_do = {};
+	window._dataObj = t_do;
+
+	t_do.canvasWidth = 400;//CanvasWidth
+	t_do.canvasHeight = 600;//CanvasHeight
+	t_do.canvasColor = 0x330000;//CanvasColor
+	t_do.isLog = true;//IsLogUse
+
+	t_do.cdw = 20;//CellDefaultHeight
+	t_do.cdh = 20;//CellDefaultWidth
+	t_do.cbx = 0;//CellBaseX
+	t_do.cby = 0;//CellBaseY
+	t_do.cmr = 0;//CellMarginRight
+	t_do.cmb = 0;//CellMarginBottom
+	t_do.hl = window.parseInt(Math.floor(t_do.canvasWidth / t_do.cdw));//HorizontalLength
+	t_do.vl = window.parseInt(Math.floor(t_do.canvasHeight / t_do.cdh));//VerticalLength
+	t_do.tl = t_do.hl * t_do.vl;//TotalLength
+
+	p_canvas_createCells();
+
+
+	// Test
+	var t_so = p_canvas_shapeObjCreate(1);
+	p_canvas_shapeObjUpdate(t_so);
+};
+/*
+# 테트리스 알고리즘 설명
+
+*/
+
+
+//
+jQuery(document).ready(
+	function() {
+		p_canvas_init();
+	}
+);
+</script>
+</head>
+
+<body>
+
+<div id="stageCont_dv">
+	<div id="canvasCont_dv">
+	</div>
+</div>
+<div id="testLog_dv"></div>
+</body>
+
+</html>
+
+
+
+
+#ff0000
+#33ff00
+#00ff99
+#3300ff
+#ff00cc
+#ffcc00
+#0099ff

@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Main</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body {
+	margin: 0px; padding: 0px; overflow: hidden;
+	background-color: #ffffff;
+	font-family: 돋움;
+	font-size: 11px;
+	color: #000000;
+}
+
+#stageCont_dv {
+	width: 600px; height: 600px;
+	position: absolute; left: 20px; top: 20px;
+	overflow: hidden;
+	/*display: none;*/
+	background-image: url('images/Background.png');
+	background-repeat: no-repeat;
+/*
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #ff0000;*/
+}
+#canvasCont_dv {
+	width: 400px; height: 600px;
+	position: absolute; left: 200px; top: 0px;
+	overflow: hidden;
+	/*background-color: #ff0000;*/
+}
+#testLog_dv {
+	width: 400px; height: 260px;
+	position: absolute; left: 10px; top: 610px;
+	overflow: scroll;
+	background-color: #ff0000;
+	color: #ffffff;
+	display: none;
+}
+</style>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript">
+// :: 캔버스 셀 생성
+var p_canvas_createCell = function() {
+	var t_DIV_STR =
+		'<div style="position: absolute; left: 0px; top: 0px; ' +
+			'overflow: hidden; width: 19px; height: 19px; ' +
+			'background-color: #ff0000; '+
+/*			'border-left-style: none; ' +
+			'border-left-width: 1px;' +
+			'border-left-color: #ffffff;' +*/
+			'border-right-style: solid; ' +
+			'border-right-width: 1px;' +
+			'border-right-color: #ffffff;' +
+/*			'border-top-style: none; ' +
+			'border-top-width: 1px;' +
+			'border-top-color: #ffffff;' +*/
+			'border-bottom-style: solid; ' +
+			'border-bottom-width: 1px;' +
+			'border-bottom-color: #ffffff;' +
+			'"></div>';
+	var t_rv = jQuery(t_DIV_STR);
+	return t_rv;
+};
+
+// :: 캔버스 셀들 생성
+var p_canvas_createCells = function() {
+	var t_do = window._dataObj;
+
+	var t_cells = [];
+	t_do.cells = t_cells;
+
+	var t_canvasCont = jQuery('#canvasCont_dv');
+
+	for (var i = 0; i < t_do.tl; i++) {
+		var t_c = p_canvas_createCell();
+		var t_tx = Math.round((t_do.cdw + t_do.cmr) * (i % t_do.hl));
+		var t_ty = Math.round((t_do.cdh + t_do.cmb) * Math.floor(i / t_do.hl));
+		var t_rx = t_do.cbx + t_tx;
+		var t_ry = t_do.cby + t_ty;
+		t_c.css('left', t_rx + 'px');
+		t_c.css('top', t_ry + 'px');
+		t_canvasCont.append(t_c);
+	}
+};
+
+// :: 캔버스 초기화
+var p_canvas_init = function() {
+	var t_do = {};
+	window._dataObj = t_do;
+
+	t_do.canvasWidth = 400;//CanvasWidth
+	t_do.canvasHeight = 600;//CanvasHeight
+	t_do.canvasColor = 0x330000;//CanvasColor
+	t_do.isLog = true;//IsLogUse
+
+	t_do.cdw = 20;//CellDefaultHeight
+	t_do.cdh = 20;//CellDefaultWidth
+	t_do.cbx = 0;//CellBaseX
+	t_do.cby = 0;//CellBaseY
+	t_do.cmr = 0;//CellMarginRight
+	t_do.cmb = 0;//CellMarginBottom
+	t_do.hl = window.parseInt(Math.floor(t_do.canvasWidth / t_do.cdw));//HorizontalLength
+	t_do.vl = window.parseInt(Math.floor(t_do.canvasHeight / t_do.cdh));//VerticalLength
+	t_do.tl = t_do.hl * t_do.vl;//TotalLength
+
+	p_canvas_createCells();
+};
+/*
+# 테트리스 알고리즘 설명
+
+*/
+
+
+//
+jQuery(document).ready(
+	function() {
+		p_canvas_init();
+	}
+);
+</script>
+</head>
+
+<body>
+
+<div id="stageCont_dv">
+	<div id="canvasCont_dv">
+	</div>
+</div>
+<div id="testLog_dv"></div>
+</body>
+
+</html>
+
