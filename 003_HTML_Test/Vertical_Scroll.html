@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>MyHome</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
+
+var p_createSetting = function()
+
+{
+
+		var t_mainCont = jQuery('#mainCont_dv');
+
+		var t_cont = jQuery('#itemCont_dv');
+
+		var t_itemRefer = null;
+
+
+
+
+		var t_w = 400;
+
+		var t_h = 400;
+
+		var t_la = 10, i;
+
+
+
+
+		for (i = 0; i < t_la; i ++)
+
+		{
+
+			t_itemRefer = jQuery('<div />');
+
+			t_itemRefer.css({
+
+				width: t_w + 'px',
+
+				height: t_h + 'px',
+
+				float: 'left',
+
+				overflow: 'auto'});
+
+			t_cont.append(t_itemRefer);
+
+		}
+
+		t_cont.css('width', (t_w * t_la) + 'px');
+
+		t_cont.fadeIn();
+
+};
+
+
+
+
+jQuery(document).ready
+
+(
+
+	function()
+
+	{
+
+		p_createSetting();
+
+	}
+
+);
+
+</script>
+
+</head>
+
+<body>
+
+	<!-- {{{ Main Container -->
+
+	<div id="mainCont_dv"
+
+		style="
+
+			position: absolute;
+
+			width: 600px; height: 800px;
+
+			background-color: #333333; overflow: hidden; overflow-x: auto;">
+
+		<div id="itemCont_dv"></div>
+
+		</div>
+
+	</div>
+
+</body>
+
+</html>
