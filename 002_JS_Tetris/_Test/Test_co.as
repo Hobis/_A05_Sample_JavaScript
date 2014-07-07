@@ -32,18 +32,13 @@ function p_canvas_shapeObjRotate_left(oso:Object):void
 // :: 캔버스 쉐이프오프젝트 회전 (90_Angle_Right)
 function p_canvas_shapeObjRotate_right(oso:Object):void
 {
-	trace(oso.tn);
 	switch (oso.tn)
 	{
-		case 1:
+		case 3:
 		{
+			trace('요기예요.');
 			break;
 		}
-		
-		case 2:
-		{
-			break;
-		}		
 	}
 }
 
@@ -82,7 +77,6 @@ function p_canvas_shapeObjMove_left(oso:Object):void
 	{
 		var t_co:Object = t_ccos[i];
 		t_co.hn -= 1;
-		//p_canvas_cellObjPrint(t_co);
 	}
 	
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
@@ -104,7 +98,6 @@ function p_canvas_shapeObjMove_right(oso:Object):void
 	{
 		var t_co:Object = t_ccos[i];
 		t_co.hn += 1;
-		//p_canvas_cellObjPrint(t_co);
 	}
 	
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
@@ -126,7 +119,6 @@ function p_canvas_shapeObjMove_up(oso:Object):void
 	{
 		var t_co:Object = t_ccos[i];
 		t_co.vn -= 1;
-		//p_canvas_cellObjPrint(t_co);
 	}
 	
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
@@ -148,7 +140,6 @@ function p_canvas_shapeObjMove_down(oso:Object):void
 	{
 		var t_co:Object = t_ccos[i];
 		t_co.vn += 1;
-		//p_canvas_cellObjPrint(t_co);
 	}
 	
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
@@ -257,58 +248,29 @@ function p_canvas_createShapeObj(tn:uint, dp:Object = null):Object
 		dp = {hn: 3, vn: 0}
 	}
 	
-	var t_so:Object = null;	
+	var t_rv:Object = null;
+	
 	switch (tn)
 	{
 		case 1:
 		{
-			t_so =
+			t_rv =
 			{
 				tn: tn,
+				dp: dp,
 				cos:
 				[
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 1, tn),
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 2, tn),
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 3, tn),
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 3, tn)
-				]
-			};
-			break;
-		}
-		
-		case 2:
-		{
-			t_so =
-			{
-				tn: tn,
-				cos:
-				[
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 1, tn),
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 2, tn),
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 3, tn),
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 3, tn)
-				]
-			};
-			break;
-		}
-		
-		case 3:
-		{
-			t_so =
-			{
-				tn: tn,
-				cos:
-				[
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 1, tn),
-					p_canvas_createCellObj(dp.hn + 1, dp.vn + 2, tn),
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 2, tn),
-					p_canvas_createCellObj(dp.hn + 2, dp.vn + 3, tn)
+					p_canvas_createCellObj(2, 1, tn),
+					p_canvas_createCellObj(2, 2, tn),
+					p_canvas_createCellObj(1, 3, tn),
+					p_canvas_createCellObj(2, 3, tn)
 				]
 			};
 			break;
 		}
 	}
-	return t_so;
+	
+	return t_rv;
 }
 
 // :: 캔버스 셀오브젝트 보기 좋게 출력 @Param(co: CellObj)
@@ -427,13 +389,39 @@ function p_canvas_init():void
 	
 	var t_do:Object = this._dataObj;
 	t_do.isLog = true;
+/*
+	t_do.shapeObjsData =
+	[ 
+		[
+			{
+				tn: tn,
+				cos:
+				[
+					p_canvas_createCellObj(dp.hn + 2, dp.vn + 1, tn),
+					p_canvas_createCellObj(dp.hn + 2, dp.vn + 2, tn),
+					p_canvas_createCellObj(dp.hn + 1, dp.vn + 3, tn),
+					p_canvas_createCellObj(dp.hn + 2, dp.vn + 3, tn)
+				]
+			},
+			{},
+			{},
+			{}
+		],
+		[],
+		[],
+		[],
+		[],
+		[],
+		[]
+	];*/
+	
 	t_do.nowShapeObj = null;
 
 	var t_cellProto:MovieClip = this.canvasCont_mc.cellProto_mc;
 	t_do.cellProto = t_cellProto;
 	t_cellProto.visible = false;
 
-	t_do.canvasWidth = 400;//CanvasWidth
+	t_do.canvasWidth = 200;//CanvasWidth
 	t_do.canvasHeight = 480;//CanvasHeight
 
 	t_do.cdw = t_cellProto.width;//CellDefaultWidth
@@ -456,7 +444,7 @@ function p_canvas_init():void
 	
 	//p_canvas_cellStateChange(5, 1, 2);
 	
-	t_do.nowShapeObj = p_canvas_createShapeObj(3);
+	t_do.nowShapeObj = p_canvas_createShapeObj(1);
 	
 	p_canvas_shapeObjDraw(t_do.nowShapeObj);
 	
