@@ -12,7 +12,7 @@ import hb.utils.GeomUtil;
 function p_trace(msg:String):void
 {
 	var t_do:Object = this._dataObj;
-	
+
 	if (t_do.isLog)
 	{
 		trace('# [hb] ' + msg);
@@ -46,14 +46,14 @@ function p_canvas_shapeObjRotate_right(oso:Object):void
 function p_canvas_shapeObjCheckDraw(cso:Object, oso:Object):void
 {
 	p_canvas_shapeObjDraw_clear(oso);
-	
+
 	// 이동 가능
 	if (p_canvas_getIsShapeObjDraw(cso))
 	{
 		oso.cos = cso.cos;
 		p_canvas_shapeObjDraw(oso);
 	}
-	
+
 	// 이동 불가
 	else
 	{
@@ -78,7 +78,7 @@ function p_canvas_shapeObjMove_left(oso:Object):void
 		var t_co:Object = t_ccos[i];
 		t_co.hn -= 1;
 	}
-	
+
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
 }
 
@@ -99,7 +99,7 @@ function p_canvas_shapeObjMove_right(oso:Object):void
 		var t_co:Object = t_ccos[i];
 		t_co.hn += 1;
 	}
-	
+
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
 }
 
@@ -120,7 +120,7 @@ function p_canvas_shapeObjMove_up(oso:Object):void
 		var t_co:Object = t_ccos[i];
 		t_co.vn -= 1;
 	}
-	
+
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
 }
 
@@ -141,7 +141,7 @@ function p_canvas_shapeObjMove_down(oso:Object):void
 		var t_co:Object = t_ccos[i];
 		t_co.vn += 1;
 	}
-	
+
 	p_canvas_shapeObjCheckDraw(t_cso, oso);
 }
 
@@ -160,16 +160,16 @@ function p_canvas_shapeObjCopy(oso:Object):Object
 	)
 	{
 		var t_oco:Object = t_ocos[i];
-		var t_cco:Object = p_canvas_cellObjCopy(t_oco);		
+		var t_cco:Object = p_canvas_cellObjCopy(t_oco);
 		t_ccos.push(t_cco);
 	}
-	
+
 	var t_cso:Object =
 	{
 		tn: oso.tn,
 		cos: t_ccos
 	};
-	
+
 	return t_cso;
 }
 
@@ -177,7 +177,7 @@ function p_canvas_shapeObjCopy(oso:Object):Object
 function p_canvas_getIsShapeObjDraw(so:Object):Boolean
 {
 	var t_rv:Boolean = false;
-	
+
 	var t_cos:Object = so.cos;
 	var t_la:uint = t_cos.length;
 	for (var i:uint = 0; i < t_la; i++)
@@ -193,7 +193,7 @@ function p_canvas_getIsShapeObjDraw(so:Object):Boolean
 			break;
 		}
 	}
-	
+
 	return t_rv;
 }
 
@@ -214,7 +214,7 @@ function p_canvas_shapeObjDraw(so:Object):void
 {
 	// 표시할수 있음
 	if (p_canvas_getIsShapeObjDraw(so))
-	{	
+	{
 		var t_cos:Object = so.cos;
 		var t_la:uint = t_cos.length;
 		for (var i:uint = 0; i < t_la; i++)
@@ -223,11 +223,11 @@ function p_canvas_shapeObjDraw(so:Object):void
 			p_canvas_cellStateChange(t_co.hn, t_co.vn, t_co.sn);
 		}
 	}
-	
+
 	// 표시할수 없음
 	else
 	{
-		
+
 	}
 }
 
@@ -247,9 +247,9 @@ function p_canvas_createShapeObj(tn:uint, dp:Object = null):Object
 	{
 		dp = {hn: 3, vn: 0}
 	}
-	
+
 	var t_rv:Object = null;
-	
+
 	switch (tn)
 	{
 		case 1:
@@ -269,14 +269,14 @@ function p_canvas_createShapeObj(tn:uint, dp:Object = null):Object
 			break;
 		}
 	}
-	
+
 	return t_rv;
 }
 
 // :: 캔버스 셀오브젝트 보기 좋게 출력 @Param(co: CellObj)
 function p_canvas_cellObjPrint(co:Object):void
 {
-	var t_str:String = 
+	var t_str:String =
 		'hn=' + co.hn + ', ' +
 		'vn=' + co.vn + ', ' +
 		'sn=' + co.sn;
@@ -287,7 +287,7 @@ function p_canvas_cellObjPrint(co:Object):void
 function p_canvas_cellObjCopy(co:Object):Object
 {
 	var t_rv:Object =
-	{		
+	{
 		hn: co.hn,
 		vn: co.vn,
 		sn: co.sn
@@ -300,7 +300,7 @@ function p_canvas_cellObjCopy(co:Object):Object
 function p_canvas_createCellObj(hn:uint, vn:uint, sn:uint = 0):Object
 {
 	var t_rv:Object =
-	{		
+	{
 		hn: hn,//HorizontalNum(가로방향번호)
 		vn: vn,//VerticalNum(세로방향번호)
 		sn: sn
@@ -312,7 +312,7 @@ function p_canvas_createCellObj(hn:uint, vn:uint, sn:uint = 0):Object
 function p_canvas_getIsCellState(hn:uint, vn:uint):Boolean
 {
 	var t_rv:Boolean = false;
-	
+
 	var t_do:Object = this._dataObj;
 	var t_cell:MovieClip = t_do.cellRefer['cell_' + hn + '_' + vn];
 	if (t_cell != null)
@@ -322,7 +322,7 @@ function p_canvas_getIsCellState(hn:uint, vn:uint):Boolean
 			t_rv = true;
 		}
 	}
-	
+
 	return t_rv;
 }
 
@@ -343,10 +343,10 @@ function p_canvas_cellStateChange(hn:uint, vn:uint, sn:int):void
 function p_canvas_createCell():MovieClip
 {
 	var t_do:Object = this._dataObj;
-	
+
 	var t_cellProto:MovieClip = t_do.cellProto;
 	var t_class:Class = t_cellProto.constructor;
-	
+
 	var t_rv:MovieClip = MovieClip(new t_class());
 	return t_rv;
 }
@@ -358,7 +358,7 @@ function p_canvas_createCells():void
 	var t_canvasCont:MovieClip = this.canvasCont_mc;
 	var t_cellRefer:Object = {};
 	t_do.cellRefer = t_cellRefer;
-	
+
 	for (var i:uint = 0; i < t_do.tl; i++)
 	{
 		var t_cell:MovieClip = p_canvas_createCell();
@@ -374,7 +374,7 @@ function p_canvas_createCells():void
 		t_cell.d_tn = i + 1;//ThisNum
 		t_cell.d_sn = 0;//StateNum
 		t_cell.gotoAndStop(t_cell.d_sn + 1);
-		
+
 		var t_hn:uint = t_cx + 1;
 		var t_vn:uint = t_cy + 1;
 		var t_cName:String = 'cell_' + t_hn + '_' + t_vn;
@@ -386,12 +386,12 @@ function p_canvas_createCells():void
 function p_canvas_init():void
 {
 	this._dataObj = {};
-	
+
 	var t_do:Object = this._dataObj;
 	t_do.isLog = true;
 /*
 	t_do.shapeObjsData =
-	[ 
+	[
 		[
 			{
 				tn: tn,
@@ -414,7 +414,7 @@ function p_canvas_init():void
 		[],
 		[]
 	];*/
-	
+
 	t_do.nowShapeObj = null;
 
 	var t_cellProto:MovieClip = this.canvasCont_mc.cellProto_mc;
@@ -432,7 +432,7 @@ function p_canvas_init():void
 	t_do.cmb = 0;//CellMarginBottom
 	t_do.hl = uint(Math.floor(t_do.canvasWidth / t_do.cdw));//HorizontalLength
 	t_do.vl = uint(Math.floor(t_do.canvasHeight / t_do.cdh));//VerticalLength
-	t_do.tl = t_do.hl * t_do.vl;//TotalLength	
+	t_do.tl = t_do.hl * t_do.vl;//TotalLength
 
 	trace('가로방향 쎌개수(t_do.hl): ' + t_do.hl);
 	trace('세로방향 쎌개수(t_do.vl): ' + t_do.vl);
@@ -441,24 +441,24 @@ function p_canvas_init():void
 
 
 	p_canvas_createCells();
-	
+
 	//p_canvas_cellStateChange(5, 1, 2);
-	
+
 	t_do.nowShapeObj = p_canvas_createShapeObj(1);
-	
+
 	p_canvas_shapeObjDraw(t_do.nowShapeObj);
-	
-	
+
+
 	//
 	p_canvas_cellStateChange(5, 10, 2);
 	p_canvas_cellStateChange(5, 11, 2);
-	p_canvas_cellStateChange(6, 11, 2);	
-	
+	p_canvas_cellStateChange(6, 11, 2);
+
 	p_canvas_cellStateChange(5, 23, 4);
 	p_canvas_cellStateChange(6, 23, 4);
 	p_canvas_cellStateChange(5, 24, 4);
 	p_canvas_cellStateChange(6, 24, 4);
-		
+
 
 	//
 	this.stage.addEventListener(KeyboardEvent.KEY_DOWN,
@@ -468,10 +468,10 @@ function p_canvas_init():void
 			{
 				case Keyboard.LEFT:
 				{
-					p_canvas_shapeObjMove_left(t_do.nowShapeObj);					
+					p_canvas_shapeObjMove_left(t_do.nowShapeObj);
 					break;
 				}
-				
+
 				case Keyboard.RIGHT:
 				{
 					p_canvas_shapeObjMove_right(t_do.nowShapeObj);
@@ -480,7 +480,7 @@ function p_canvas_init():void
 
 				case Keyboard.UP:
 				{
-					p_canvas_shapeObjMove_up(t_do.nowShapeObj);					
+					p_canvas_shapeObjMove_up(t_do.nowShapeObj);
 					break;
 				}
 
@@ -489,23 +489,23 @@ function p_canvas_init():void
 					p_canvas_shapeObjMove_down(t_do.nowShapeObj);
 					break;
 				}
-				
+
 				case Keyboard.Z:
 				{
 					p_canvas_shapeObjRotate_left(t_do.nowShapeObj);
 					break;
 				}
-				
+
 				case Keyboard.X:
 				{
-					p_canvas_shapeObjRotate_right(t_do.nowShapeObj);					
+					p_canvas_shapeObjRotate_right(t_do.nowShapeObj);
 					break;
 				}
-				
+
 				case Keyboard.C:
 				{
 					break;
-				}				
+				}
 			}
 		}
 	);

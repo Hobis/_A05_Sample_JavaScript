@@ -298,7 +298,8 @@ function p_canvas_cellObjAxisOfRotate_right(aco:Object, tco:Object):void
 }
 
 // :: 캔버스 셀을 변경해도 괜잖은지 여부
-function p_canvas_getIsCellState(hn:uint, vn:uint):Boolean
+function
+(hn:uint, vn:uint):Boolean
 {
 	var t_rv:Boolean = false;
 
