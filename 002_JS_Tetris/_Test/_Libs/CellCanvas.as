@@ -1,8 +1,8 @@
 ﻿package
 {
 	import flash.display.MovieClip;
-	import flash.events.KeyboardEvent;
-	import flash.ui.Keyboard;
+	import hb.utils.NumberUtil;
+
 
 	public class CellCanvas
 	{
@@ -60,6 +60,68 @@
 		private var _nso:ShapeObj = null;
 
 
+		// :: Shape 제거
+		public function shapeClear():void
+		{
+			if (this._nso != null)
+			{
+				this._nso = null;
+			}
+		}
+
+		// :: Shape 랜덤하기 생성
+		public function shapeCreate():Boolean
+		{			
+			var t_ri:uint = NumberUtil.randRange(1, ShapeData.TYPES.length);
+			var t_so:ShapeObj = new ShapeObj(t_ri, 4, 1);
+			
+			var t_rv:Boolean = ShapeWorker.draw(this._cellDic, t_so);
+			
+			if (t_rv)
+			{
+				this.shapeClear();
+				this._nso = t_so;
+			}			
+			
+			return t_rv;
+		}
+
+		// :: Shape 이동
+		public function shapeMove(dir:String):Boolean
+		{
+			var t_rv:Boolean = false;
+			
+			if (this._nso != null)
+			{
+				var t_so:ShapeObj = ShapeWorker.move(dir, this._cellDic, this._nso);
+				if (t_so != this._nso)
+				{
+					this._nso = t_so;
+					t_rv = true;
+				}
+			}
+			
+			return t_rv;
+		}
+		
+		// :: Shape 회전
+		public function shapeRotate(dir:String):Boolean
+		{			
+			var t_rv:Boolean = false;
+			
+			if (this._nso != null)
+			{
+				var t_so:ShapeObj = ShapeWorker.rotate(dir, this._cellDic, this._nso);
+				if (t_so != this._nso)
+				{
+					this._nso = t_so;
+					t_rv = true;
+				}
+			}
+			
+			return t_rv;			
+		}
+
 
 		// :: 한번만 초기화
 		private function p_initOnce():void
@@ -68,75 +130,7 @@
 			this._vl = uint(Math.floor(this._canvasHeight / this._cdh));
 			this._tl = this._hl * this._vl;
 			this.p_cellsCreate();
-			
-			
-			this._nso = new ShapeObj(1, 2, 1);
-			ShapeWorker.draw(this._cellDic, this._nso);
-			
-			
-			
-			//			
-			this._owner.stage.addEventListener(KeyboardEvent.KEY_DOWN,
-				function(event:KeyboardEvent):void
-				{
-					switch (event.keyCode)
-					{
-						case Keyboard.LEFT:
-						{
-							p_shapeMove(ShapeWorker.MOVE_DIR_LEFT);
-							break;
-						}
-		
-						case Keyboard.RIGHT:
-						{
-							p_shapeMove(ShapeWorker.MOVE_DIR_RIGHT);
-							break;
-						}
-		
-						case Keyboard.UP:
-						{
-							p_shapeMove(ShapeWorker.MOVE_DIR_UP);
-							break;
-						}
-		
-						case Keyboard.DOWN:
-						{
-							p_shapeMove(ShapeWorker.MOVE_DIR_DOWN);
-							break;
-						}
-		
-						case Keyboard.Z:
-						{
-							p_shapeRotate(ShapeWorker.ROTATE_DIR_LEFT);
-							break;
-						}
-		
-						case Keyboard.X:
-						{
-							break;
-						}
-		
-						case Keyboard.C:
-						{
-							p_shapeRotate(ShapeWorker.ROTATE_DIR_RIGHT);
-							break;
-						}
-					}
-				}
-			);		
 		}
-		
-		// ::
-		private function p_shapeMove(dir:String):void
-		{
-			this._nso = ShapeWorker.move(dir, this._cellDic, this._nso);
-		}
-		
-		// ::
-		private function p_shapeRotate(dir:String):void
-		{
-			this._nso = ShapeWorker.rotate(dir, this._cellDic, this._nso);
-		}		
 
 		// :: Cell 생성
 		private function p_cellCreate():MovieClip

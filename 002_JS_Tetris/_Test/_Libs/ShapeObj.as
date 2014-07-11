@@ -9,7 +9,7 @@
 			this._hn = hn;
 			this._vn = vn;
 			this._ri = ri;
-			this._cellObjs = ShapeData['TYPE_' + this._typeNum][this._ri];
+			this._cellObjs = ShapeData.TYPES[this._typeNum - 1][this._ri];
 		}
 		
 		// - TypeNum
@@ -92,70 +92,70 @@
 		// ::
 		public function get_moveClone(dir:String):ShapeObj
 		{
-			var t_rv:ShapeObj = this.clone();
+			var t_so:ShapeObj = this.clone();
 			
 			switch (dir)
 			{
 				case ShapeWorker.MOVE_DIR_LEFT:
 				{
-					t_rv._hn -= 1;
+					t_so._hn -= 1;
 					break;
 				}
 				
 				case ShapeWorker.MOVE_DIR_RIGHT:
 				{
-					t_rv._hn += 1;
+					t_so._hn += 1;
 					break;
 				}
 				
 				case ShapeWorker.MOVE_DIR_UP:
 				{
-					t_rv._vn -= 1;
+					t_so._vn -= 1;
 					break;
 				}
 				
 				case ShapeWorker.MOVE_DIR_DOWN:
 				{
-					t_rv._vn += 1;
+					t_so._vn += 1;
 					break;
 				}				
 			}
 			
-			return t_rv;			
+			return t_so;			
 		}
 		
 		// ::
 		public function get_rotateClone(dir:String):ShapeObj
 		{
-			var t_rv:ShapeObj = this.clone();
+			var t_so:ShapeObj = this.clone();
 			
-			var t_typeArr:Array = ShapeData['TYPE_' + this._typeNum];
+			var t_typeArr:Array = ShapeData.TYPES[this._typeNum - 1];
 			switch (dir)
 			{
 				case ShapeWorker.ROTATE_DIR_LEFT:
 				{
-					if (this._ri > 0)
-						this._ri--;
+					if (t_so._ri > 0)
+						t_so._ri--;
 					else
-						this._ri = t_typeArr.length - 1;
-					this._cellObjs = t_typeArr[this._ri];
+						t_so._ri = t_typeArr.length - 1;
+					t_so._cellObjs = t_typeArr[t_so._ri];
 					//trace('this._ri: ' + this._ri);
 					break;
 				}
 				
 				case ShapeWorker.ROTATE_DIR_RIGHT:
 				{
-					if (this._ri < (t_typeArr.length - 1))
-						this._ri++;
+					if (t_so._ri < (t_typeArr.length - 1))
+						t_so._ri++;
 					else
-						this._ri = 0;
-					this._cellObjs = t_typeArr[this._ri];
+						t_so._ri = 0;
+					t_so._cellObjs = t_typeArr[t_so._ri];
 					//trace('this._ri: ' + this._ri);
 					break;
 				}
 			}
 			
-			return t_rv;			
+			return t_so;			
 		}		
 	}
 }

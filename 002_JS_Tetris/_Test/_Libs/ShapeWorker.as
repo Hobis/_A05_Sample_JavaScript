@@ -50,8 +50,10 @@
 		}
 		
 		// :: ShapeObj 표시하기
-		public static function draw(cellDic:Object, so:ShapeObj):void
+		public static function draw(cellDic:Object, so:ShapeObj):Boolean
 		{
+			var t_rv:Boolean = false;
+			
 			if (get_isDraw(cellDic, so))
 			{
 				var t_cos:Array = so.get_cellObjs();
@@ -64,7 +66,11 @@
 					var t_sn:uint = t_co.sn;
 					CellWorker.stateChange(cellDic, t_hn, t_vn, t_sn);
 				}
+				
+				t_rv = true;
 			}
+			
+			return t_rv;
 		}
 		
 
@@ -133,7 +139,7 @@
 			{
 				draw(cellDic, t_oso);
 				t_rv = t_oso;
-			}		
+			}
 			
 			return t_rv;
 		}
