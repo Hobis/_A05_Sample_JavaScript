@@ -12,9 +12,8 @@
 			this._owner = owner;
 			this._canvasWidth = this._owner.width;
 			this._canvasHeight = this._owner.height;
-			this._cellProto = this._owner.cellProto_mc;
-			this._cdw = this._cellProto.width;
-			this._cdh = this._cellProto.height;
+			this._cdw = 20;
+			this._cdh = 20;
 
 			this.p_initOnce();
 		}
@@ -22,9 +21,6 @@
 
 		// - Canvas 참조
 		private var _owner:MovieClip = null;
-
-		// - Cell 원형
-		private var _cellProto:MovieClip = null;
 
 		// - Cell Dictionary
 		private var _cellDic:Object = null;
@@ -133,10 +129,9 @@
 		}
 
 		// :: Cell 생성
-		private function p_cellCreate():MovieClip
+		private function p_cellCreate():Cell
 		{
-			var t_class:Class = this._cellProto.constructor;
-			var t_rv:MovieClip = MovieClip(new t_class());
+			var t_rv:Cell = new Cell(this._cdw, this._cdh);
 			return t_rv;
 		}
 
@@ -146,20 +141,19 @@
 			this._cellDic = {};
 			for (var i:uint = 0; i < this._tl; i++)
 			{
-				var t_cell:MovieClip = p_cellCreate();
+				var t_cell:Cell = p_cellCreate();
 				var t_cx:uint = uint(i % this._hl);
 				var t_cy:uint = uint(Math.floor(i / this._hl));
 				var t_tx:Number = Math.round((this._cdw + this._cmr) * t_cx);
 				var t_ty:Number = Math.round((this._cdh + this._cmb) * t_cy);
 				var t_rx:Number = this._cbx + t_tx;
 				var t_ry:Number = this._cby + t_ty;
-				t_cell.x = t_rx;
-				t_cell.y = t_ry;
-				this._owner.addChild(t_cell);
-
-				t_cell.d_tn = i + 1;//ThisNum
-				t_cell.d_sn = 0;//StateNum
-				t_cell.gotoAndStop(1);
+				t_cell.set_x(t_rx);
+				t_cell.set_y(t_ry);
+				this._owner.addChild(t_cell.get_rect());
+				
+				t_cell.num = i + 1;//ThisNum
+				t_cell.set_state(0);//StateNum
 
 
 				var t_hn:uint = t_cx + 1;

@@ -4,7 +4,7 @@
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
 	import flash.events.Event;
-	import flash.ui.Keyboard;	
+	import flash.ui.Keyboard;
 	import hb.frame.FPSTimer;
 	
 

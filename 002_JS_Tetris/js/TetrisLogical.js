@@ -1,54 +1,11 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Main</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<style type="text/css">
-body {
-	margin: 0px; padding: 0px; overflow: hidden;
-	background-color: #ffffff;
-	font-family: ë‹ì›€;
-	font-size: 11px;
-	color: #000000;
-}
-
-#stageCont_dv {
-	width: 600px; height: 600px;
-	position: absolute; left: 20px; top: 20px;
-	overflow: hidden;
-	background-repeat: no-repeat;
-/*
-	border-right-style: solid;
-	border-right-width: 1px;
-	border-right-color: #ff0000;*/
-}
-#canvasCont_dv {
-	width: 200px; height: 480px;
-	position: absolute; left: 200px; top: 0px;
-	overflow: hidden;
-	/*background-color: #ff0000;*/
-}
-#testLog_dv {
-	width: 400px; height: 260px;
-	position: absolute; left: 10px; top: 610px;
-	overflow: scroll;
-	background-color: #ff0000;
-	color: #ffffff;
-	display: none;
-}
-</style>
-<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
-<script type="text/javascript">
-// #
-(function() {
-	if (window.HB_Adapter != undefined) {
-		return;
-	}
-
-	window.HB_Adapter = {
-		wrap: function(target, routine) {
-			var t_func = function() {
+if (window.$Adapter == undefined)
+{
+	window.$Adapter =
+	{
+		wrap: function(target, routine)
+		{
+			var t_func = function()
+			{
 				var t_target = arguments.callee.target;
 				var t_routine = arguments.callee.routine;
 				var t_param =  arguments.concat(
@@ -62,10 +19,10 @@ body {
 			t_func.param = this.p_getParam(arguments, 2);
 
 			return t_func;
-		}
+		},
 
-		,
-		p_getParam: function(array, count) {
+		p_getParam: function(array, count)
+		{
 			var t_rv = [];
 
 			if (array.length < count + 1)
@@ -73,18 +30,21 @@ body {
 
 			var t_la = array.length;
 			var i;
-			for (i = count; i < t_la; i ++) {
+
+			for (i = count; i < t_la; i ++)
+			{
 				t_rv.push(array[i]);
 			}
 
 			return t_rv;
-		}
+		},
 
-		,
-		remove: function(func) {
+		remove: function(func)
+		{
 			var t_rv = (func instanceof Function) ? func : null;
 
-			if (t_rv != null) {
+			if (t_rv != null)
+			{
 				t_rv.target = null;
 				t_rv.routine = null;
 				t_rv.param = null;
@@ -94,65 +54,7 @@ body {
 			return t_rv;
 		}
 	};
-})();
-
-
-// #
-(function() {
-	if (window.HB_Cell != undefined) {
-		return;
-	}
-
-	// #
-	window.HB_Cell = function(w, h) {
-		//
-		var t_DIV_STR =
-			'<div style="position: absolute; left: 0px; top: 0px; ' +
-				'overflow: hidden; width: 18px; height: 18px; ' +
-				'background-color: #ffffff; ' +
-				'border: 1px solid #000066"></div>';
-		// -
-		this._rect = jQuery(t_DIV_STR);
-
-		// -
-		this.num = 0;
-
-		// -
-		this._stateNum = 0;
-		// ::
-		this.get_state = function() {
-			return this._stateNum;
-		};
-		// ::
-		this.set_state = function(v) {
-			this._stateNum = v;
-			this._rect.css('background-color', Cell._RECT_COLORS[this._stateNum]);
-		};
-
-
-		// ::
-		this.get_x = function() {
-			return parseInt(this._rect.css('left'));
-		};
-		// ::
-		this.set_x = function(v) {
-			this._rect.css('left', v + 'px');
-		};
-
-		// ::
-		this.get_y = function() {
-			return parseInt(this._rect.css('top'));
-		};
-		// ::
-		this.set_y = function(v) {
-			this._rect.css('top', v + 'px');
-		};
-	};
-	window.HB_Cell._RECT_COLORS = [
-		0xffffff, 0xff0000, 0x33ff00, 0x00FF99, 0x3300ff, 0xff00cc, 0xffcc00, 0x0099ff
-	];
-})();
-
+};
 
 // #
 var Cell = function(w, h) {
@@ -206,15 +108,15 @@ Cell._RECT_COLORS = [
 // #
 var CellCanvas = function(owner) {
 
-	// - Canvas ì°¸ì¡° jQueryê°ì²´
+	// - Canvas ÂüÁ¶ jQuery°´Ã¼
 	this._owner = owner;
 
 	// - Cell Dictionary
 	this._cellDic = null;
 
-	// - Canvas ë„“ì´
+	// - Canvas ³ĞÀÌ
 	this._canvasWidth = this._owner.width();
-	// - Canvas ë†’ì´
+	// - Canvas ³ôÀÌ
 	this._canvasHeight = this._owner.height();
 
 	// - CellDefaultWidth
@@ -243,23 +145,23 @@ var CellCanvas = function(owner) {
 	this._nso = null;
 
 
-	// :: Shape ì œê±°
+	// :: Shape Á¦°Å
 	this.shapeClear = function() {
 	};
 
-	// :: Shape ëœë¤í•˜ê¸° ìƒì„±
+	// :: Shape ·£´ıÇÏ±â »ı¼º
 	this.shapeCreate = function() {
 	};
 
-	// :: Shape ì´ë™
+	// :: Shape ÀÌµ¿
 	this.shapeMove = function(dir) {
 	};
 
-	// :: Shape íšŒì „
+	// :: Shape È¸Àü
 	this.shapeRotate = function(dir) {
 	};
 
-	// :: Cellë“¤ ìƒì„±
+	// :: Cellµé »ı¼º
 	this.p_cellsCreate = function() {
 		//
 		for (var i = 0; i < this._tl; i++) {
@@ -349,28 +251,3 @@ var GameLogic = function(owner) {
 
 	this.p_newShapeStart();*/
 };
-
-
-jQuery(document).ready(
-	function() {
-		//ìº”ë²„ìŠ¤ ì´ˆê¸°í™”
-		//p_canvas_init();
-
-		var t_gl = new GameLogic(jQuery('#canvasCont_dv'));
-	}
-);
-</script>
-</head>
-
-<body>
-
-<div id="stageCont_dv" style="left: 100px;">
-	<div id="canvasCont_dv">
-	</div>
-</div>
-
-<div id="testLog_dv"></div>
-</body>
-
-</html>
-
