@@ -1,8 +1,8 @@
 /**
-@Name: JavaScript Object Handler Tool
+@Name: JavaScript Timer
 @Author: HobisJung
 @Date: 2014-07-15
-@Ver: 1.20
+@Ver: 1.0
 ========================================================================================== */
 (function() {
 	if (window.HB_Adapter != undefined) {
