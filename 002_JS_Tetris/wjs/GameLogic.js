@@ -8,13 +8,103 @@
 		p_initOnce: function(owner) {
 			this._owner = owner;
 			this._cc = new CellCanvas(this._owner);
-			this._downSpeed = 1000;
+			this._levelInfos = [
+				{
+					downSpeed: 1000,
+					lines: 7,
+				}
+
+				,
+				{
+					downSpeed: 800,
+					lines: 10,
+				}
+
+				,
+				{
+					downSpeed: 600,
+					lines: 13,
+				}
+
+				,
+				{
+					downSpeed: 400,
+					lines: 16,
+				}
+
+				,
+				{
+					downSpeed: 200,
+					lines: 19
+				}
+			];
+			this._level = 1;
+			this._lines = this._levelInfos[this._level - 1].lines;
+			this._score = 0;
 
 			jQuery(document).keydown(HB_Adapter.wrap(this, this.p_keyDown));
-			this._timer = new HB_Timer(this._downSpeed);
+			this._timer = new HB_Timer(this._levelInfos[this._level - 1].downSpeed);
 			this._timer.onCallBack = HB_Adapter.wrap(this, this.p_timer_onCallBack);
 
+			//this.p_newShapeStart();
+
+			//this._level
+		}
+
+		,
+		lineCheck: function() {
+
+			if (this._lines > 1) {
+				this._lines--;
+				jQuery('#txt_2').text('Lines: ' + this._lines);
+
+				this._score += 10;
+				jQuery('#txt_3').text('Score: ' + this._score);
+			}
+			else {
+				if (this._level < this._levelInfos.length) {
+					this._level++;
+					jQuery('#txt_1').text('Lever: ' + this._level);
+
+					this._lines = this._levelInfos[this._level - 1].lines;
+					jQuery('#txt_2').text('Lines: ' + this._lines);
+
+					this._timer.stop();
+					this._timer.set_delay(this._levelInfos[this._level - 1].downSpeed);
+
+					//this._score = 0;
+					//jQuery('#txt_3').text('Score: ' + this._score);
+				}
+				else {
+					alert('엔딩 ㅋㅋㅋ');
+					this.stop();
+				}
+			}
+		}
+
+		,
+		start: function() {
+			this.stop();
+
+			this._level = 1;
+			this._lines = this._levelInfos[this._level - 1].lines;
+			this._score = 0;
+			this._timer.set_delay(this._levelInfos[this._level - 1].downSpeed);
 			this.p_newShapeStart();
+
+			jQuery('#txt_1').text('Level: ' + this._level);
+			jQuery('#txt_2').text('Lines: ' + this._lines);
+			jQuery('#txt_3').text('Score: ' + 0);
+		}
+
+		,
+		stop: function() {
+			this._timer.reset();
+			this._cc.clear();
+
+			jQuery('#txt_1').text('');
+			jQuery('#txt_2').text('');
+			jQuery('#txt_3').text('');
 		}
 
 		,
@@ -24,6 +114,10 @@
 
 		,
 		p_keyDown: function(eObj) {
+			if (!this._timer.get_running()) {
+				//alert(this._timer.get_running());
+				return;
+			}
 
 			switch (eObj.keyCode) {
 				// Key_Left
@@ -119,10 +213,17 @@
 		,
 		// ::
 		p_newShapeStart: function() {
-			this._cc.clearLineCheck();
-			this._cc.shapeCreate();
-			this._timer.reset();
-			this._timer.start();
+			if (!this._cc.checkDeadLine()) {
+				this._cc.clearLineCheck();
+				this._cc.shapeCreate();
+				this._timer.stop();
+				this._timer.start();
+
+			}
+			else {
+				alert('Game Over');
+				this._timer.reset();
+			}
 		}
 
 	});
@@ -174,7 +275,39 @@
 			// - NowShapeObj
 			this._nso = null;
 
+			// -
+			this._nextIdx = -1;
+
 			this.p_cellsCreate();
+		}
+
+		,
+		// ::
+		checkDeadLine: function() {
+			if (this._nso != null) {
+				if (this._nso.get_vn() < 5) {
+					return true;
+				}
+
+				//console.log('::::::: ' + this._nso.get_vn());
+			}
+			return false;
+		}
+
+		,
+		// ::
+		clear: function() {
+			this.shapeClear();
+
+			for (var i = 0; i < this._tl; i++) {
+				var t_cx = i % this._hl;
+				var t_cy = Math.floor(i / this._hl);
+				var t_hn = t_cx + 1;
+				var t_vn = t_cy + 1;
+				var t_cName = 'cell_' + t_hn + '_' + t_vn;
+				var t_cell = this._cellDic[t_cName];
+				t_cell.set_state(0);
+			}
 		}
 
 		,
@@ -222,8 +355,37 @@
 		,
 		// :: Shape 랜덤하기 생성
 		shapeCreate: function() {
-			var t_ri = HB_Number.randRange(1, ShapeData.TYPES.length);
+			var t_ri;
+
+			if (this._nextIdx != -1) {
+				t_ri = this._nextIdx;
+			}
+			else {
+				t_ri = HB_Number.randRange(1, ShapeData.TYPES.length);
+			}
+
+			this._nextIdx = HB_Number.randRange(1, ShapeData.TYPES.length);
+
+			g_vl.clear();
+			ShapeWorker.draw(g_vl._cellDic, new ShapeObj(this._nextIdx, 1, 1));
+
 			var t_so = new ShapeObj(t_ri, 4, 1);
+
+			var t_rv = ShapeWorker.draw(this._cellDic, t_so);
+
+			if (t_rv) {
+				this.shapeClear();
+				this._nso = t_so;
+			}
+
+			return t_rv;
+		}
+
+		,
+		// :: Shape 랜덤하기 생성
+		shapeCreate2: function() {
+			var t_ri = HB_Number.randRange(1, ShapeData.TYPES.length);
+			var t_so = new ShapeObj(t_ri, 1, 1);
 
 			var t_rv = ShapeWorker.draw(this._cellDic, t_so);
 
@@ -269,14 +431,20 @@
 
 		,
 		// ::
-		p_clearAfterDown: function(ej) {
-			if (ej > -1) {
-				for (var i = ej; i > 0; i--) {
-					//var t_hn = i + 1;
-					//var t_vn = j + 1;
-					//var t_cName = 'cell_' + t_hn + '_' + t_vn;
-					//t_cell = this._cellDic[t_cName];
-					//t_cell.moveDown();
+		p_clearAfterDown: function(j) {
+			for (; j > 0; j--) {
+				for (var i = 0; i < this._hl; i++) {
+					var t_hn = i + 1;
+					var t_vn = j + 1;
+					var t_cName = 'cell_' + t_hn + '_' + t_vn;
+					t_cell = this._cellDic[t_cName];
+					var t_sn = t_cell.get_state();
+					t_cell.set_state(0);
+
+					t_vn += 1;
+					t_cName = 'cell_' + t_hn + '_' + t_vn;
+					t_cell = this._cellDic[t_cName];
+					t_cell.set_state(t_sn);
 				}
 			}
 		}
@@ -291,12 +459,19 @@
 				t_cell = this._cellDic[t_cName];
 				t_cell.set_state(0);
 			}
+
+			var t_dj = j - 1;
+			if (t_dj > 0) {
+				this.p_clearAfterDown(t_dj);
+			}
+
+			g_gl.lineCheck();
 		}
 
 		,
 		// ::
 		clearLineCheck: function() {
-			var t_ej = -1;
+
 			for (var j = 0; j < this._vl; j++) {
 				var t_b = false;
 				for (var i = 0; i < this._hl; i++) {
@@ -315,11 +490,9 @@
 
 				if (t_b) {
 					this.p_clearLine(j);
-					t_ej = j;
 				}
 			}
 
-			this.p_clearAfterDown(t_ej);
 		}
 
 	});
@@ -394,7 +567,7 @@
 
 	// -
 	t_class._RECT_COLORS = [
-		'#b4b4b4', '#ff0000', '#33ff00', '#00FF99', '#3300ff', '#ff00cc', '#ffcc00', '#0099ff'
+		'#b4b4b4', '#006600', '#0033ff', '#990000', '#669900', '#999900', '#6600cc', '#339999'
 	];
 
 })();

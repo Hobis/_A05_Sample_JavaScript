@@ -62,7 +62,7 @@ body {
 }
 
 html.touch body {
-     overflow:hidden;
+     overflow: hidden;
 }
 </style>
 <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
@@ -188,21 +188,59 @@ jQuery(document).ready(
 
 		window.g_gl = new GameLogic(jQuery('#canvas_dv'));
 
-		jQuery('#bt_1').css('cursor', 'pointer').mousedown(function() {
-			g_gl.keyGo(38);
-		});
-		jQuery('#bt_2').css('cursor', 'pointer').mousedown(function() {
-			g_gl.keyGo(37);
-		});
-		jQuery('#bt_3').css('cursor', 'pointer').mousedown(function() {
-			g_gl.keyGo(40);
-		});
-		jQuery('#bt_4').css('cursor', 'pointer').mousedown(function() {
-			g_gl.keyGo(39);
-		});
-		jQuery('#bt_5').css('cursor', 'pointer').mousedown(function() {
-			g_gl.keyGo(88);
-		});
+		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+
+			jQuery('#bt_1').bind('touchstart',function() {
+				g_gl.keyGo(38);
+			});
+			jQuery('#bt_2').bind('touchstart',function() {
+				g_gl.keyGo(37);
+			});
+			jQuery('#bt_3').bind('touchstart',function() {
+				g_gl.keyGo(40);
+			});
+			jQuery('#bt_4').bind('touchstart',function() {
+				g_gl.keyGo(39);
+			});
+			jQuery('#bt_5').bind('touchstart',function() {
+				g_gl.keyGo(88);
+			});
+
+			jQuery('#bt_6').bind('touchstart',function() {
+				g_gl.start();
+			});
+			jQuery('#bt_7').bind('touchstart',function() {
+				g_gl.stop();
+			});
+		}
+		else {
+
+			jQuery('#bt_1').bind('click',function() {
+				g_gl.keyGo(38);
+			});
+			jQuery('#bt_2').bind('click',function() {
+				g_gl.keyGo(37);
+			});
+			jQuery('#bt_3').bind('click',function() {
+				g_gl.keyGo(40);
+			});
+			jQuery('#bt_4').bind('click',function() {
+				g_gl.keyGo(39);
+			});
+			jQuery('#bt_5').bind('click',function() {
+				g_gl.keyGo(88);
+			});
+
+			jQuery('#bt_6').bind('click',function() {
+				g_gl.start();
+			});
+			jQuery('#bt_7').bind('click',function() {
+				g_gl.stop();
+			});
+		}
+
+		window.g_vl = new CellCanvas(jQuery('#prv_dv'));
+		//window.g_vl.shapeCreate2();
 	}
 );
 </script>
@@ -211,7 +249,31 @@ jQuery(document).ready(
 <!--body ondragstart="return false" onselectstart="return false" oncontextmenu="return false"-->
 <body ontouchmove="event.preventDefault();">
 <div id="rootCont_dv">
-	<div id="leftUiCont_dv"></div>
+	<div id="leftUiCont_dv" style="color: #000000;">
+		<div style="position: absolute; width: 100px; height: 200px;
+				left: 10px; top: 10px; background-color: #ffffff;
+				font-size: 14px; font-weight: bold;">
+			<span>Next: </span><br />
+			<div style="position: absolute; width: 80px; height: 80px;
+					left: 0px; top: 20px; background-color: #ff0000;" id="prv_dv"></div>
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<br />
+			<span id="txt_1"></span>
+			<br />
+			<span id="txt_2"></span>
+			<br />
+			<span id="txt_3"></span>
+			<br />
+			<br />
+			<br />
+			<br />
+			<button type="button" id="bt_6">Start</button><button type="button" id="bt_7">Stop</button>
+		</div>
+	</div>
 	<div id="canvasMask_dv">
 		<div id="canvas_dv"></div>
 	</div>
