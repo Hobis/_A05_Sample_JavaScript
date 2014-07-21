@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Main</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<style type="text/css">
+body {
+	margin: 0px; padding: 0px; overflow: hidden;
+	background-color: #000000;
+	font-family: 돋움;
+	font-size: 11px;
+	color: #ffffff;
+}
+
+#stageCont_dv {
+	width: 600px; height: 480px;
+	position: absolute; left: 10px; top: 10px;
+	overflow: hidden;
+	background-color: #006633;
+/*
+	border-right-style: solid;
+	border-right-width: 1px;
+	border-right-color: #ff0000;*/
+}
+#canvasCont_dv {
+	width: 200px; height: 480px;
+	position: absolute; left: 200px; top: 0px;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+#leftTitleBox_dv {
+	width: 180px; height: 40px;
+	position: absolute; left: 10px; top: 10px;
+	overflow: hidden;
+	background-color: #000000;
+	text-align: center;
+	padding-top: 18px;
+	font-size: 18px;
+	font-weight: bold;
+	font-family: Vernada;
+}
+#leftUiBox_dv {
+	width: 180px; height: 100px;
+	position: absolute; left: 10px; top: 100px;
+	overflow: hidden;
+	background-color: #ff0000;
+	text-align: left;
+	padding-top: 18px;
+	font-size: 13px;
+}
+#testLog_dv {
+	width: 400px; height: 260px;
+	position: absolute; left: 10px; top: 610px;
+	overflow: scroll;
+	background-color: #ff0000;
+	color: #ffffff;
+	display: none;
+}
+</style>
+<script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="hbjs/HB_Utils.js"></script>
+<script type="text/javascript" src="hbjs/HB_Timer.js"></script>
+<script type="text/javascript" src="wjs/GameLogic.js"></script>
+<script type="text/javascript">
+//
+jQuery(document).ready(
+	function() {
+
+		var t_gl = new GameLogic(jQuery('#canvasCont_dv'));
+	}
+);
+</script>
+</head>
+
+<body>
+<div id="stageCont_dv">
+	<div id="leftTitleBox_dv">PhoneGap Tetris</div>
+	<div id="leftUiBox_dv">
+		&nbsp;&nbsp;&nbsp;Speed: <span id="is_1">0</span><br /><br />
+		&nbsp;&nbsp;&nbsp;Score: <span id="is_2">0</span><br /><br />
+		&nbsp;&nbsp;&nbsp;Line: <span id="is_3">0</span><br /><br />
+	</div>
+	<button id="bt_1" type="button" style="position: absolute; left: 10px; top: 240px;">GameStart</button>
+	<button id="bt_2" type="button" style="position: absolute; left: 100px; top: 240px;">GameStop</button>
+	<div id="canvasCont_dv"></div>
+</div>
+
+<div id="testLog_dv"></div>
+</body>
+
+</html>
+

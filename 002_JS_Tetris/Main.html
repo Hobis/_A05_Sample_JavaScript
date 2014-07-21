@@ -1,33 +1,56 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Main</title>
+<title>PhoneGap Tetris</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="format-detection" content="telephone=no" />
+<!--meta name="viewport" content="user-scalable=no, initial-scale=1,
+	maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" /-->
+<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="description" content="Match-3 puzzle-game written in HTML/CSS/JS">
+
 <style type="text/css">
 body {
-	margin: 0px; padding: 0px; overflow: hidden;
-	background-color: #ffffff;
-	font-family: 돋움;
+	margin: 0px; padding: 0px;
+	overflow: hidden;
+	background-color: #000000;
+	font-family: Dotum, Gulim, Verdana;
 	font-size: 11px;
-	color: #000000;
+	color: #ffffff;
 }
 
-#stageCont_dv {
-	width: 600px; height: 600px;
-	position: absolute; left: 20px; top: 20px;
+#rootCont_dv {
+	position: absolute; left: 0px; top: 0px;
 	overflow: hidden;
-	background-repeat: no-repeat;
-/*
-	border-right-style: solid;
-	border-right-width: 1px;
-	border-right-color: #ff0000;*/
+	background-color: #006633;
 }
-#canvasCont_dv {
-	width: 200px; height: 480px;
-	position: absolute; left: 200px; top: 0px;
+#leftUiCont_dv {
+	position: absolute; left: 0px; top: 0px;
 	overflow: hidden;
-	/*background-color: #ff0000;*/
+	background-color: #ffffff;
+}
+#canvasMask_dv {
+	position: absolute; left: 0px; top: 0px;
+	overflow: hidden;
+	background-color: #000000;
+}
+#canvas_dv {
+	position: absolute; left: 0px; top: 0px;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+#bottomUiCont_dv {
+	position: absolute; left: 0px; top: 0px;
+	overflow: hidden;
+	background-color: #ffffff;
+}
+#keyCont_dv {
+	position: absolute; left: 0px; top: 0px;
+	overflow: hidden;
+	background-color: #ffffff;
 }
 #testLog_dv {
 	width: 400px; height: 260px;
@@ -37,335 +60,163 @@ body {
 	color: #ffffff;
 	display: none;
 }
+
+html.touch body {
+     overflow:hidden;
+}
 </style>
 <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+<script type="text/javascript" src="hbjs/HB_Utils.js"></script>
+<script type="text/javascript" src="hbjs/HB_Timer.js"></script>
+<script type="text/javascript" src="wjs/GameLogic.js"></script>
 <script type="text/javascript">
-// #
-(function() {
-	if (window.HB_Adapter != undefined) {
-		return;
+// ::
+var p_layoutSetting = function() {
+	var t_ROOT_W = 720 / 2;
+	var t_ROOT_H = 1280 / 2;
+	//var t_ROOT_MH = 10;
+	//var t_ROOT_MV = 10;
+
+	var t_o = null;
+
+	t_o = jQuery('#rootCont_dv');
+	t_o.css('width', t_ROOT_W + 'px');
+	t_o.css('height', t_ROOT_H + 'px');
+	t_o.css('left', '0px');
+	t_o.css('top', '0px');
+
+	t_o = jQuery('#leftUiCont_dv');
+	t_o.css('width', '130px');
+	t_o.css('height', '400px');
+	t_o.css('left', '10px');
+	t_o.css('top', '10px');
+
+	t_o = jQuery('#canvasMask_dv');
+	t_o.css('width', '200px');
+	t_o.css('height', '400px');
+	t_o.css('left', '150px');
+	t_o.css('top', '10px');
+
+	t_o = jQuery('#canvas_dv');
+	t_o.css('width', '200px');
+	t_o.css('height', '480px');
+	t_o.css('left', '0px');
+	t_o.css('top', '-80px');
+
+	t_o = jQuery('#bottomUiCont_dv');
+	t_o.css('width', (t_ROOT_W - (10 * 2)) + 'px');
+	t_o.css('height', '180px');
+	t_o.css('left', '10px');
+	t_o.css('top', '420px');
+
+	t_o = jQuery('#keyCont_dv');
+	t_o.css('width', '180px');
+	t_o.css('height', '180px');
+	t_o.css('left', '80px');
+	t_o.css('top', '0px');
+	//t_o.css('background-color', '#ff0000');
+
+	var t_cont = jQuery('#keyCont_dv');
+	var t_key = jQuery('<div id="bt_1"><div/>');
+	t_key.css({
+		 'position': 'absolute',
+		 'background-color': '#000000',
+		 'width': '60px',
+		 'height': '60px',
+		 'left': '60px',
+		 'top': '0px'
+	});
+	t_cont.append(t_key);
+	t_key = jQuery('<div id="bt_2"><div/>');
+	t_key.css({
+		 'position': 'absolute',
+		 'background-color': '#000000',
+		 'width': '60px',
+		 'height': '60px',
+		 'left': '0px',
+		 'top': '60px'
+	});
+	t_cont.append(t_key);
+	t_key = jQuery('<div id="bt_3"><div/>');
+	t_key.css({
+		 'position': 'absolute',
+		 'background-color': '#000000',
+		 'width': '60px',
+		 'height': '60px',
+		 'left': '60px',
+		 'top': '60px'
+	});
+	t_cont.append(t_key);
+	t_key = jQuery('<div id="bt_4"><div/>');
+	t_key.css({
+		 'position': 'absolute',
+		 'background-color': '#000000',
+		 'width': '60px',
+		 'height': '60px',
+		 'left': '120px',
+		 'top': '60px'
+	});
+	t_cont.append(t_key);
+	t_key = jQuery('<div id="bt_5"><div/>');
+	t_key.css({
+		 'position': 'absolute',
+		 'background-color': '#000000',
+		 'width': '60px',
+		 'height': '60px',
+		 'left': '60px',
+		 'top': '120px'
+	});
+	t_cont.append(t_key);
+
+	document.addEventListener('touchstart', this.touchstart);
+	document.addEventListener('touchmove', this.touchmove);
+
+	function touchstart(e) {
+		e.preventDefault()
 	}
 
-	window.HB_Adapter = {
-		wrap: function(target, routine) {
-			var t_func = function() {
-				var t_target = arguments.callee.target;
-				var t_routine = arguments.callee.routine;
-				var t_param =  arguments.concat(
-					window.$Adapter.p_getParam(arguments.callee.param, 0));
-
-				return t_routine.apply(t_target, t_param);
-			};
-
-			t_func.target = target;
-			t_func.routine = routine;
-			t_func.param = this.p_getParam(arguments, 2);
-
-			return t_func;
-		}
-
-		,
-		p_getParam: function(array, count) {
-			var t_rv = [];
-
-			if (array.length < count + 1)
-				return t_rv;
-
-			var t_la = array.length;
-			var i;
-			for (i = count; i < t_la; i ++) {
-				t_rv.push(array[i]);
-			}
-
-			return t_rv;
-		}
-
-		,
-		remove: function(func) {
-			var t_rv = (func instanceof Function) ? func : null;
-
-			if (t_rv != null) {
-				t_rv.target = null;
-				t_rv.routine = null;
-				t_rv.param = null;
-				t_rv = null;
-			}
-
-			return t_rv;
-		}
-	};
-})();
-
-
-// #
-(function() {
-	if (window.HB_Cell != undefined) {
-		return;
+	function touchmove(e) {
+		e.preventDefault()
 	}
-
-	// #
-	window.HB_Cell = function(w, h) {
-		//
-		var t_DIV_STR =
-			'<div style="position: absolute; left: 0px; top: 0px; ' +
-				'overflow: hidden; width: 18px; height: 18px; ' +
-				'background-color: #ffffff; ' +
-				'border: 1px solid #000066"></div>';
-		// -
-		this._rect = jQuery(t_DIV_STR);
-
-		// -
-		this.num = 0;
-
-		// -
-		this._stateNum = 0;
-		// ::
-		this.get_state = function() {
-			return this._stateNum;
-		};
-		// ::
-		this.set_state = function(v) {
-			this._stateNum = v;
-			this._rect.css('background-color', Cell._RECT_COLORS[this._stateNum]);
-		};
-
-
-		// ::
-		this.get_x = function() {
-			return parseInt(this._rect.css('left'));
-		};
-		// ::
-		this.set_x = function(v) {
-			this._rect.css('left', v + 'px');
-		};
-
-		// ::
-		this.get_y = function() {
-			return parseInt(this._rect.css('top'));
-		};
-		// ::
-		this.set_y = function(v) {
-			this._rect.css('top', v + 'px');
-		};
-	};
-	window.HB_Cell._RECT_COLORS = [
-		0xffffff, 0xff0000, 0x33ff00, 0x00FF99, 0x3300ff, 0xff00cc, 0xffcc00, 0x0099ff
-	];
-})();
-
-
-// #
-var Cell = function(w, h) {
-	//
-	var t_DIV_STR =
-		'<div style="position: absolute; left: 0px; top: 0px; ' +
-			'overflow: hidden; width: 18px; height: 18px; ' +
-			'background-color: #ffffff; ' +
-			'border: 1px solid #000066"></div>';
-	// -
-	this._rect = jQuery(t_DIV_STR);
-
-	// -
-	this.num = 0;
-
-	// -
-	this._stateNum = 0;
-	// ::
-	this.get_state = function() {
-		return this._stateNum;
-	};
-	// ::
-	this.set_state = function(v) {
-		this._stateNum = v;
-		this._rect.css('background-color', Cell._RECT_COLORS[this._stateNum]);
-	};
-
-
-	// ::
-	this.get_x = function() {
-		return parseInt(this._rect.css('left'));
-	};
-	// ::
-	this.set_x = function(v) {
-		this._rect.css('left', v + 'px');
-	};
-
-	// ::
-	this.get_y = function() {
-		return parseInt(this._rect.css('top'));
-	};
-	// ::
-	this.set_y = function(v) {
-		this._rect.css('top', v + 'px');
-	};
-};
-Cell._RECT_COLORS = [
-	0xffffff, 0xff0000, 0x33ff00, 0x00FF99, 0x3300ff, 0xff00cc, 0xffcc00, 0x0099ff
-];
-
-// #
-var CellCanvas = function(owner) {
-
-	// - Canvas 참조 jQuery객체
-	this._owner = owner;
-
-	// - Cell Dictionary
-	this._cellDic = null;
-
-	// - Canvas 넓이
-	this._canvasWidth = this._owner.width();
-	// - Canvas 높이
-	this._canvasHeight = this._owner.height();
-
-	// - CellDefaultWidth
-	this._cdw = 20;
-	// - CellDefaultHeight
-	this._cdh = 20;
-
-	// - CellBaseX
-	this._cbx = 0;
-	// - CellBaseY
-	this._cby = 0;
-
-	// - CellMarginRight
-	this._cmr = 0;
-	// - CellMarginBottom
-	this._cmb = 0;
-
-	// - HorizontalLength
-	this._hl = Math.floor(this._canvasWidth / this._cdw);
-	// - VerticalLength
-	this._vl = Math.floor(this._canvasHeight / this._cdh);
-	// - TotalLength
-	this._tl = this._hl * this._vl;
-
-	// - NowShapeObj
-	this._nso = null;
-
-
-	// :: Shape 제거
-	this.shapeClear = function() {
-	};
-
-	// :: Shape 랜덤하기 생성
-	this.shapeCreate = function() {
-	};
-
-	// :: Shape 이동
-	this.shapeMove = function(dir) {
-	};
-
-	// :: Shape 회전
-	this.shapeRotate = function(dir) {
-	};
-
-	// :: Cell들 생성
-	this.p_cellsCreate = function() {
-		//
-		for (var i = 0; i < this._tl; i++) {
-			var t_cell = new Cell(this._cdw, this._cdh);
-			var t_cx = Math.floor(i % this._hl);
-			var t_cy = Math.floor(i / this._hl);
-			var t_tx = Math.round((this._cdw + this._cmr) * t_cx);
-			var t_ty = Math.round((this._cdh + this._cmb) * t_cy);
-			var t_rx = this._cbx + t_tx;
-			var t_ry = this._cby + t_ty;
-			t_cell.set_x(t_rx);
-			t_cell.set_y(t_ry);
-			this._owner.append(t_cell);
-
-			t_cell.num = i + 1;//ThisNum
-			t_cell.set_state(0);//StateNum
-
-			if (this._cellDic == null) {
-				this._cellDic = {};
-			}
-			var t_hn = t_cx + 1;
-			var t_vn = t_cy + 1;
-			var t_cName = 'cell_' + t_hn + '_' + t_vn;
-			this._cellDic[t_cName] = t_cell;
-		}
-	};
-
-	this.p_cellsCreate();
 };
 
-
-// #
-var GameLogic = function(owner) {
-	this._owner = owner;
-	this._cc = new CellCanvas(this._owner);
-
-	// ::
-	this.p_intelDown = function() {
-	};
-
-	// ::
-	this.p_newShapeStart = function() {
-	};
-
-
-	// ::
-	this.p_keyDown = function(eObj) {
-		//var t_to = window.GameLogic;
-		alert(eObj.currentTarget);
-		/*
-		switch (eObj.keyCode) {
-			case 37: {
-				break;
-			}
-
-			case 39: {
-				break;
-			}
-		}*/
-	};
-
-	//
-	var t_keyDown = function(eObj) {
-		var t_to = arguments.callee.d_to;
-
-		switch (eObj.keyCode) {
-			case 37: {
-				break;
-			}
-
-			case 39: {
-				break;
-			}
-		}
-	};
-	t_keyDown.d_to = this;
-	jQuery(document).keydown(t_keyDown);
-
-
-
-
-
-/*
-	this._owner.stage.addEventListener(KeyboardEvent.KEY_DOWN, this.p_stage_keyDown);
-	this._fpsTimer = new FPSTimer(40);
-	this._fpsTimer.onCallBack = this.p_fpsTimer_onCallBack;
-
-	this.p_newShapeStart();*/
-};
-
-
+//
 jQuery(document).ready(
 	function() {
-		//캔버스 초기화
-		//p_canvas_init();
+		// GalaxyS3 720x1280
+		p_layoutSetting();
 
-		var t_gl = new GameLogic(jQuery('#canvasCont_dv'));
+		window.g_gl = new GameLogic(jQuery('#canvas_dv'));
+
+		jQuery('#bt_1').css('cursor', 'pointer').mousedown(function() {
+			g_gl.keyGo(38);
+		});
+		jQuery('#bt_2').css('cursor', 'pointer').mousedown(function() {
+			g_gl.keyGo(37);
+		});
+		jQuery('#bt_3').css('cursor', 'pointer').mousedown(function() {
+			g_gl.keyGo(40);
+		});
+		jQuery('#bt_4').css('cursor', 'pointer').mousedown(function() {
+			g_gl.keyGo(39);
+		});
+		jQuery('#bt_5').css('cursor', 'pointer').mousedown(function() {
+			g_gl.keyGo(88);
+		});
 	}
 );
 </script>
 </head>
 
-<body>
-
-<div id="stageCont_dv" style="left: 100px;">
-	<div id="canvasCont_dv">
+<!--body ondragstart="return false" onselectstart="return false" oncontextmenu="return false"-->
+<body ontouchmove="event.preventDefault();">
+<div id="rootCont_dv">
+	<div id="leftUiCont_dv"></div>
+	<div id="canvasMask_dv">
+		<div id="canvas_dv"></div>
+	</div>
+	<div id="bottomUiCont_dv">
+		<div id="keyCont_dv"></div>
 	</div>
 </div>
 
